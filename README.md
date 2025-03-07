@@ -2,6 +2,11 @@
 
 A lightweight web application for organizing and managing LLM prompts, links, and text snippets with dynamic placeholders.
 
+## Online Demo
+
+Try the application online without installation:
+[https://www.pierj.com/demo/link-llm-prompt-manager/](https://www.pierj.com/demo/link-llm-prompt-manager/)
+
 ## Features
 
 - Create and manage cards containing titles, links, and LLM prompts
