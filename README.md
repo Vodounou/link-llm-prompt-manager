@@ -1,46 +1,65 @@
-# Gestionnaire de Cartes
+# Link & LLM Prompt Manager
 
-Une application web légère pour organiser et gérer des notes, liens et textes sous forme de cartes interactives.
+A lightweight web application for organizing and managing LLM prompts, links, and text snippets with dynamic placeholders.
 
-## Fonctionnalités
+## Features
 
-- Création et gestion de cartes avec titres, liens et textes
-- Copie rapide du contenu des cartes
-- Ouverture des liens associés aux cartes
-- Recherche et filtrage par tags ou texte
-- Export et import des données au format JSON
-- Thème clair/sombre
-- Interface minimaliste et intuitive
+- Create and manage cards containing titles, links, and LLM prompts
+- Dynamic placeholder system (date/time, clipboard content)
+- One-click copy of prompt text to clipboard
+- One-click opening of associated links
+- Search and filter by tags or text content
+- Export and import data in JSON format
+- Light/dark theme
+- Minimalist and intuitive interface
 
-## Technologies utilisées
+## Use Cases
+
+- **LLM Prompt Management**: Store and organize prompts for different AI models
+- **Research Organization**: Group links by research topics or projects
+- **Quick Access**: Instantly access frequently used resources
+- **Dynamic Content**: Use placeholders for dynamic content in your prompts
+
+## Technologies
 
 - HTML5
 - CSS3
 - JavaScript (Vanilla)
-- Marked.js pour le rendu Markdown
+- Marked.js for Markdown rendering
 
 ## Installation
 
-Aucune installation n'est nécessaire. Il suffit de cloner ce dépôt et d'ouvrir le fichier `index.html` dans un navigateur web.
+No installation required. Simply clone this repository and open the `index.html` file in a web browser.
 
 ```bash
-git clone https://github.com/votre-nom-utilisateur/gestionnaire-cartes.git
-cd gestionnaire-cartes
+git clone https://github.com/your-username/link-llm-prompt-manager.git
+cd link-llm-prompt-manager
 ```
 
-## Utilisation
+## Usage
 
-1. Cliquez sur "+" pour ajouter une nouvelle carte
-2. Donnez un titre à votre carte
-3. Ajoutez des liens ou du texte à copier
-4. Utilisez les tags pour organiser vos cartes
-5. Cliquez sur le titre d'une carte pour copier son contenu ou ouvrir ses liens
-6. Utilisez la barre de recherche pour filtrer les cartes
+1. Click "+" to add a new card
+2. Give your card a title
+3. Add links or prompt text with optional placeholders
+4. Use tags to organize your cards
+5. Click on a card title to copy its content or open its links
+6. Use the search bar to filter cards by title or tags
 
-## Sauvegarde et exportation
+## Placeholder System
 
-Toutes les données sont sauvegardées automatiquement dans le stockage local de votre navigateur. Vous pouvez également exporter vos données au format JSON pour les sauvegarder ou les partager.
+The application supports dynamic placeholders that are replaced when copying text:
 
-## Licence
+- `{YYYY-MM-DD_HH-mm-SS}`: Current date and time in the format YYYY-MM-DD_HH-mm-SS
+- `{clipboard}`: Current clipboard content
 
-Ce projet est sous licence MIT.
+## Backup and Export
+
+All data is automatically saved in your browser's local storage. You can also export your data to a JSON file for backup or sharing.
+
+## Contributing
+
+Contributions are welcome! Feel free to submit pull requests or suggest new features, especially additional placeholders.
+
+## License
+
+This project is licensed under the MIT License.

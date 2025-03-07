@@ -1,185 +1,185 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionnaire de Liens et Prompts</title>
-    <!-- Marked.js pour le rendu Markdown -->
+    <title>Link & LLM Prompt Manager</title>
+    <!-- Marked.js for Markdown rendering -->
     <script src="https://cdn.jsdelivr.net/npm/marked@5.0.2/marked.min.js"></script>
-    <!-- CSS personnalisé -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <header>
             <div class="header-top">
-                <h1>Gestionnaire de Liens et Prompts</h1>
+                <h1>Link & LLM Prompt Manager</h1>
                 <div class="header-controls">
-                    <button id="settingsButton" class="btn-settings" title="Paramètres">⚙️</button>
-                    <button id="themeToggle" class="btn-theme" title="Changer le thème">🌙</button>
-                    <button id="addNewCard" class="btn-primary">Ajouter</button>
-                    <button id="exportData" class="btn-secondary">Exporter</button>
+                    <button id="settingsButton" class="btn-settings" title="Settings">⚙️</button>
+                    <button id="themeToggle" class="btn-theme" title="Toggle theme">🌙</button>
+                    <button id="addNewCard" class="btn-primary">Add</button>
+                    <button id="exportData" class="btn-secondary">Export</button>
                     <input type="file" id="importInput" accept=".json" style="display: none">
-                    <button id="importData" class="btn-secondary">Importer</button>
+                    <button id="importData" class="btn-secondary">Import</button>
                 </div>
             </div>
             <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Rechercher dans les titres..." class="search-input">
+                <input type="text" id="searchInput" placeholder="Search in titles..." class="search-input">
                 <span id="searchCount" class="search-count"></span>
             </div>
             <div id="tagCloud" class="tag-cloud">
-                <!-- Les tags seront générés ici dynamiquement -->
+                <!-- Tags will be generated here dynamically -->
             </div>
             <div id="notification-container"></div>
         </header>
 
         <main id="cardsContainer" class="cards-grid">
-            <!-- Les cartes seront générées dynamiquement ici -->
+            <!-- Cards will be generated dynamically here -->
         </main>
     </div>
 
-    <!-- Modale des paramètres -->
+    <!-- Settings modal -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Paramètres</h2>
-                <button class="modal-close" title="Fermer">✕</button>
+                <h2>Settings</h2>
+                <button class="modal-close" title="Close">✕</button>
             </div>
             <div class="modal-body">
                 <section class="settings-section">
-                    <h3>Aide et fonctionnement</h3>
+                    <h3>Help & Usage</h3>
                     <div class="help-content">
-                        <h4>Présentation générale</h4>
-                        <p>Ce gestionnaire vous permet d'organiser vos liens et prompts en cartes. Chaque carte contient :</p>
+                        <h4>General Overview</h4>
+                        <p>This manager allows you to organize your links and prompts into cards. Each card contains :</p>
                         <ul>
-                            <li>Un titre pour identifier rapidement le contenu</li>
-                            <li>Un ou plusieurs liens à ouvrir</li>
-                            <li>Un texte à copier (peut contenir des placeholders)</li>
-                            <li>Des tags pour organiser et filtrer</li>
-                            <li>Une description optionnelle en Markdown</li>
+                            <li>A title for quick identification of the content</li>
+                            <li>One or more links to open</li>
+                            <li>Text to copy (can contain placeholders)</li>
+                            <li>Tags for organization and filtering</li>
+                            <li>An optional Markdown description</li>
                         </ul>
 
-                        <h4>Organisation par tags</h4>
-                        <p>Les tags permettent d'organiser et filtrer vos cartes :</p>
+                        <h4>Tag Organization</h4>
+                        <p>Tags allow you to organize and filter your cards :</p>
                         <ul>
-                            <li><strong>Tags principaux</strong> : commencent par une majuscule et apparaissent en haut (ex: Projet, Formation)</li>
-                            <li><strong>Tags secondaires</strong> : en minuscules, apparaissent en dessous (ex: urgent, todo)</li>
-                            <li>Cliquez sur un tag pour filtrer les cartes</li>
-                            <li>Cliquez sur plusieurs tags pour affiner le filtrage</li>
+                            <li><strong>Main tags</strong> : start with a capital letter and appear at the top (e.g. Project, Training)</li>
+                            <li><strong>Secondary tags</strong> : in lowercase, appear below (e.g. urgent, todo)</li>
+                            <li>Click on a tag to filter cards</li>
+                            <li>Click on multiple tags to refine filtering</li>
                         </ul>
 
-                        <h4>Utilisation des cartes</h4>
-                        <p>Chaque carte propose plusieurs actions :</p>
+                        <h4>Using Cards</h4>
+                        <p>Each card offers several actions :</p>
                         <ul>
-                            <li><strong>Clic sur le titre</strong> : Action complète en une fois :
+                            <li><strong>Click on the title</strong> : Complete action in one go :
                                 <ol>
-                                    <li>Remplace les placeholders dans le texte</li>
-                                    <li>Copie le texte dans le presse-papier</li>
-                                    <li>Ouvre le(s) lien(s) associé(s) dans un nouvel onglet</li>
+                                    <li>Replace placeholders in the text</li>
+                                    <li>Copy the text to the clipboard</li>
+                                    <li>Open the associated link(s) in a new tab</li>
                                 </ol>
                             </li>
-                            <li><strong>Bouton "Copier"</strong> : Copie uniquement le texte :
+                            <li><strong>Copy button</strong> : Copy only the text :
                                 <ol>
-                                    <li>Remplace les placeholders dans le texte</li>
-                                    <li>Copie le texte dans le presse-papier</li>
-                                    <li>Affiche une notification de confirmation</li>
+                                    <li>Replace placeholders in the text</li>
+                                    <li>Copy the text to the clipboard</li>
+                                    <li>Display a confirmation notification</li>
                                 </ol>
                             </li>
-                            <li><strong>Bouton "Lien"</strong> : Ouvre uniquement le(s) lien(s) dans un nouvel onglet</li>
+                            <li><strong>Link button</strong> : Open only the associated link(s) in a new tab</li>
                         </ul>
 
-                        <p><strong>Note sur les placeholders</strong> : Lors de la copie, si un placeholder {clipboard} est présent, le système :</p>
+                        <p><strong>Note on placeholders</strong> : When copying, if a {clipboard} placeholder is present, the system :</p>
                         <ol>
-                            <li>Sauvegarde d'abord le contenu actuel de votre presse-papier</li>
-                            <li>Copie le nouveau texte avec les placeholders</li>
-                            <li>Remplace {clipboard} par le contenu précédemment sauvegardé</li>
+                            <li>First saves the current content of your clipboard</li>
+                            <li>Copies the new text with placeholders</li>
+                            <li>Replaces {clipboard} with the previously saved content</li>
                         </ol>
 
-                        <h4>Utilisation des placeholders</h4>
-                        <p>Les placeholders sont des variables qui sont remplacées automatiquement lors de la copie. Par exemple :</p>
+                        <h4>Using Placeholders</h4>
+                        <p>Placeholders are variables that are automatically replaced when copying. For example :</p>
                         <div class="placeholder-examples">
                             <div class="placeholder-example">
-                                <code>{YYYY-MM-DD_HH-mm-SS}</code> → Date et heure actuelles
+                                <code>{YYYY-MM-DD_HH-mm-SS}</code> → Current date and time
                             </div>
                             <div class="placeholder-example">
-                                <code>{clipboard}</code> → Contenu précédent du presse-papier
+                                <code>{clipboard}</code> → Previous clipboard content
                             </div>
                         </div>
                     </div>
                 </section>
 
                 <section class="settings-section">
-                    <h3>Sauvegarde et portabilité</h3>
+                    <h3>Backup & Portability</h3>
                     <div class="help-content">
-                        <h4>Stockage local</h4>
-                        <p>Toutes vos données (cartes, tags, paramètres) sont stockées localement dans la mémoire de votre navigateur. Cela signifie que :</p>
+                        <h4>Local Storage</h4>
+                        <p>All your data (cards, tags, settings) is stored locally in your browser's memory. This means that :</p>
                         <ul>
-                            <li>Vos données restent privées et sur votre appareil</li>
-                            <li>Aucune connexion internet n'est nécessaire</li>
-                            <li>Les données persistent même après la fermeture du navigateur</li>
+                            <li>Your data remains private and on your device</li>
+                            <li>No internet connection is required</li>
+                            <li>Data persists even after closing the browser</li>
                         </ul>
 
-                        <h4>Sauvegarde automatique</h4>
-                        <p>À chaque modification (ajout/modification/suppression de carte), un fichier JSON est automatiquement généré et téléchargé. Ce fichier contient :</p>
+                        <h4>Automatic Backup</h4>
+                        <p>After each modification (add/edit/delete card), a JSON file is automatically generated and downloaded. This file contains :</p>
                         <ul>
-                            <li>Toutes vos cartes avec leurs détails</li>
-                            <li>Vos tags et leur organisation</li>
-                            <li>Vos paramètres personnalisés</li>
+                            <li>All your cards with their details</li>
+                            <li>Your tags and their organization</li>
+                            <li>Your customized settings</li>
                         </ul>
 
-                        <h4>Restauration et portabilité</h4>
-                        <p>Les fichiers JSON téléchargés vous permettent de :</p>
+                        <h4>Restoration & Portability</h4>
+                        <p>The downloaded JSON files allow you to :</p>
                         <ul>
-                            <li>Restaurer vos données si le stockage local est effacé</li>
-                            <li>Transférer vos cartes vers un autre appareil (PC, téléphone, tablette)</li>
-                            <li>Faire des sauvegardes manuelles de sécurité</li>
-                            <li>Partager votre configuration avec d'autres utilisateurs</li>
+                            <li>Restore your data if local storage is cleared</li>
+                            <li>Transfer your cards to another device (PC, phone, tablet)</li>
+                            <li>Make manual security backups</li>
+                            <li>Share your configuration with other users</li>
                         </ul>
 
-                        <p><strong>Conseil</strong> : Conservez régulièrement une copie des fichiers JSON téléchargés dans un endroit sûr pour pouvoir restaurer vos données si nécessaire.</p>
+                        <p><strong>Tips</strong> : Regularly keep a copy of the downloaded JSON files in a safe place to be able to restore your data if needed.</p>
                     </div>
                 </section>
 
                 <section class="settings-section">
-                    <h3>Placeholders disponibles</h3>
+                    <h3>Available Placeholders</h3>
                     <div id="placeholdersList" class="placeholders-list">
-                        <!-- La liste des placeholders sera générée ici -->
+                        <!-- The list of placeholders will be generated here -->
                     </div>
                 </section>
             </div>
         </div>
     </div>
 
-    <!-- Template pour une nouvelle carte -->
+    <!-- Template for a new card -->
     <template id="cardTemplate">
         <div class="card">
             <div class="card-header">
-                <button class="btn-expand" title="Développer">▼</button>
+                <button class="btn-expand" title="Expand">▼</button>
                 <div class="card-title-container">
-                    <h2 class="card-title">Nouveau titre</h2>
+                    <h2 class="card-title">New title</h2>
                     <div class="card-actions-icons"></div>
                 </div>
             </div>
             <div class="card-content">
                 <div class="input-group">
-                    <label>Titre</label>
-                    <input type="text" class="card-title-edit" placeholder="Titre de la carte">
+                    <label>Title</label>
+                    <input type="text" class="card-title-edit" placeholder="Card title">
                 </div>
                 <div class="input-group">
-                    <label>URLs (une par ligne)</label>
+                    <label>URLs (one per line)</label>
                     <textarea class="card-url" placeholder="https://...&#10;https://..."></textarea>
                 </div>
                 <div class="input-group">
-                    <label>Tags (séparés par des virgules)</label>
+                    <label>Tags (comma-separated)</label>
                     <input type="text" class="card-tags" placeholder="tag1, tag2, tag3...">
                 </div>
                 <div class="input-group">
-                    <label>Texte à copier</label>
-                    <textarea class="card-copytext" placeholder="Texte à copier..."></textarea>
+                    <label>Text to copy</label>
+                    <textarea class="card-copytext" placeholder="Text to copy..."></textarea>
                 </div>
                 <div class="card-buttons">
-                    <button class="btn-delete">Supprimer ✕</button>
-                    <button class="btn-save">💾 Sauvegarder</button>
+                    <button class="btn-delete">Delete ✕</button>
+                    <button class="btn-save">💾 Save</button>
                 </div>
             </div>
         </div>

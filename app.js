@@ -1,11 +1,11 @@
 class CardManager {
     constructor() {
-        console.log('Initialisation du gestionnaire de cartes...');
+        console.log('Initializing the prompt and link manager...');
         
-        // Système de gestion des placeholders avec descriptions
+        // Placeholder management system with descriptions
         this.placeholders = {
             'YYYY-MM-DD_HH-mm-SS': {
-                description: 'Date et heure actuelles au format YYYY-MM-DD_HH-mm-SS',
+                description: 'Current date and time in YYYY-MM-DD_HH-mm-SS',
                 example: '2025-02-19_15-39-05',
                 getValue: () => {
                     const now = new Date();
@@ -23,20 +23,20 @@ class CardManager {
             },
             
             'clipboard': {
-                description: 'Contenu actuel du presse-papier',
-                example: 'Texte copié...',
+                description: 'Current clipboard content',
+                example: 'Copied text...',
                 getValue: async () => {
                     try {
                         return await navigator.clipboard.readText();
                     } catch (err) {
-                        console.error('Erreur lors de la lecture du presse-papier:', err);
+                        console.error('Error reading clipboard:', err);
                         return '{clipboard}';
                     }
                 }
             }
         };
 
-        // Récupérer les éléments du DOM
+        // Get DOM elements
         this.container = document.getElementById('cardsContainer');
         this.template = document.getElementById('cardTemplate');
         this.addButton = document.getElementById('addNewCard');
@@ -49,32 +49,32 @@ class CardManager {
         this.tagCloud = document.getElementById('tagCloud');
         this.notificationContainer = document.getElementById('notification-container');
         
-        // Éléments de la modale des paramètres
+        // Settings modal elements
         this.settingsButton = document.getElementById('settingsButton');
         this.settingsModal = document.getElementById('settingsModal');
         this.modalClose = this.settingsModal.querySelector('.modal-close');
         this.placeholdersList = document.getElementById('placeholdersList');
 
-        // État des filtres
+        // Filter state
         this.activeTags = new Set();
         
-        // Vérifier que marked est disponible
+        // Check if marked is available
         if (typeof marked === 'undefined') {
             this.markdownAvailable = false;
-            console.error('La bibliothèque marked n\'est pas chargée');
-            this.showNotification('La bibliothèque marked n\'est pas chargée', 'error');
+            console.error('The marked library is not loaded');
+            this.showNotification('The marked library is not loaded', 'error');
         } else {
             this.markdownAvailable = true;
-            console.log('✓ Bibliothèque marked chargée avec succès');
+            console.log('✓ Marked library successfully loaded');
             
-            // Configurer marked avec la nouvelle API
+            // Configure marked with the new API
             if (typeof marked.parse === 'function') {
                 this.parseMarkdown = (text) => marked.parse(text);
             } else {
                 this.parseMarkdown = (text) => marked(text);
             }
             
-            // Options de sécurité
+            // Security options
             marked.setOptions({
                 sanitize: true,
                 breaks: true
@@ -83,34 +83,34 @@ class CardManager {
 
         this.cards = [];
         
-        // Initialiser le thème
+        // Initialize theme
         this.initTheme();
         
-        // Initialiser l'application
+        // Initialize the application
         this.init();
-        console.log('✓ Gestionnaire de cartes initialisé');
+        console.log('✓ Prompt and link manager initialized');
     }
 
     initTheme() {
-        console.log('Initialisation du thème...');
-        // Vérifier si un thème est sauvegardé
+        console.log('Initializing theme...');
+        // Check if a theme is saved
         const savedTheme = localStorage.getItem('theme');
         
-        // Vérifier les préférences système
+        // Check system preferences
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         
-        // Appliquer le thème sauvegardé ou les préférences système
+        // Apply saved theme or system preferences
         if (savedTheme) {
-            console.log(`Thème sauvegardé trouvé : ${savedTheme}`);
+            console.log(`Found saved theme : ${savedTheme}`);
             document.documentElement.setAttribute('data-theme', savedTheme);
         } else if (prefersDark) {
-            console.log('Préférence système pour le thème sombre détectée');
+            console.log('System preference for dark theme detected');
             document.documentElement.setAttribute('data-theme', 'dark');
         }
         
-        // Mettre à jour l'icône du bouton
+        // Update button icon
         this.updateThemeIcon();
-        console.log('✓ Thème initialisé');
+        console.log('✓ Theme initialized');
     }
 
     updateThemeIcon() {
@@ -119,43 +119,43 @@ class CardManager {
     }
 
     toggleTheme() {
-        console.log('Changement de thème...');
+        console.log('Changing theme...');
         const currentTheme = document.documentElement.getAttribute('data-theme');
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         
-        console.log(`Passage du thème ${currentTheme || 'light'} à ${newTheme}`);
+        console.log(`Switching from theme ${currentTheme || 'light'} to ${newTheme}`);
         
         document.documentElement.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         
         this.updateThemeIcon();
-        console.log('✓ Thème mis à jour');
+        console.log('✓ Theme updated');
     }
 
     init() {
-        // Charger les données sauvegardées
+        // Load saved data
         this.loadCards();
         
-        // Ajouter les écouteurs d'événements
+        // Add event listeners
         this.addButton.addEventListener('click', () => this.addCard());
         this.exportButton.addEventListener('click', () => this.exportData());
         this.importButton.addEventListener('click', () => this.importInput.click());
         this.importInput.addEventListener('change', (e) => this.importData(e));
         this.themeToggle.addEventListener('click', () => this.toggleTheme());
         
-        // Configuration de la modale des paramètres
+        // Settings modal configuration
         this.setupSettingsModal();
         
-        // Configurer la recherche
+        // Configure search
         this.setupSearch();
         
-        console.log('✓ Gestionnaire de cartes initialisé');
+        console.log('✓ Prompt and link manager initialized');
     }
 
     setupSearch() {
-        console.log('Configuration de la recherche...');
+        console.log('Configuring search...');
         
-        // Fonction de debounce pour éviter trop d'appels pendant la frappe
+        // Debounce function to avoid too many calls during typing
         const debounce = (func, wait) => {
             let timeout;
             return function executedFunction(...args) {
@@ -168,37 +168,37 @@ class CardManager {
             };
         };
         
-        // Fonction de recherche
+        // Search function
         const filterCards = (searchText = '') => {
-            console.log('Filtrage des cartes...');
-            console.log('Texte de recherche:', searchText);
-            console.log('Tags actifs:', [...this.activeTags]);
+            console.log('Filtering cards...');
+            console.log('Search text:', searchText);
+            console.log('Active tags:', [...this.activeTags]);
 
             let visibleCount = 0;
             
             this.cards.forEach(card => {
-                // Récupérer les tags de la carte
+                // Get card tags
                 const cardTags = card.querySelector('.card-tags').value
                     .split(',')
                     .map(tag => tag.trim())
                     .filter(tag => tag);
                 
-                console.log('Carte:', card.querySelector('.card-title').textContent);
-                console.log('Tags de la carte:', cardTags);
+                console.log('Card:', card.querySelector('.card-title').textContent);
+                console.log('Card tags:', cardTags);
                 
-                // Vérifier si la carte correspond aux critères de recherche
+                // Check if card matches search criteria
                 const matchesSearch = searchText === '' || 
                     card.querySelector('.card-title').textContent.toLowerCase()
                         .includes(searchText.toLowerCase());
                 
-                // Vérifier si la carte a tous les tags actifs
+                // Check if card has all active tags
                 const hasAllActiveTags = this.activeTags.size === 0 || 
                     [...this.activeTags].every(tag => cardTags.includes(tag));
                 
-                console.log('Correspond à la recherche:', matchesSearch);
-                console.log('A tous les tags actifs:', hasAllActiveTags);
+                console.log('Matches search:', matchesSearch);
+                console.log('Has all active tags:', hasAllActiveTags);
                 
-                // Afficher ou masquer la carte
+                // Show or hide card
                 if (matchesSearch && hasAllActiveTags) {
                     card.style.display = '';
                     visibleCount++;
@@ -207,46 +207,46 @@ class CardManager {
                 }
             });
             
-            // Mettre à jour le compteur de résultats
+            // Update the results counter
             if (this.searchCount) {
                 this.searchCount.textContent = visibleCount > 0 
-                    ? `${visibleCount} résultat${visibleCount > 1 ? 's' : ''}`
-                    : 'Aucun résultat';
+                    ? `${visibleCount} result${visibleCount > 1 ? 's' : ''}`
+                    : 'No results';
             }
             
-            console.log(`✓ Filtrage terminé : ${visibleCount} carte(s) visible(s)`);
+            console.log(`✓ Filtering completed: ${visibleCount} card(s) visible`);
         };
 
-        // Mettre à jour le compteur de résultats
+        // Update the results counter
         this.updateSearchCount = (count) => {
             const total = this.cards.length;
             if (this.searchInput.value.trim() || this.activeTags.size > 0) {
-                this.searchCount.textContent = `${count} sur ${total} cartes`;
+                this.searchCount.textContent = `${count} out of ${total} cards`;
             } else {
                 this.searchCount.textContent = '';
             }
         };
         
-        // Écouter les changements dans la barre de recherche
+        // Listen for changes in the search bar
         this.searchInput.addEventListener('input', debounce((e) => {
             filterCards(e.target.value);
         }, 300));
         
-        // Mettre à jour les tags quand une carte est modifiée
+        // Update tags when a card is modified
         const updateTagCloud = debounce(() => {
-            console.log('Mise à jour du nuage de tags...');
+            console.log('Updating tag cloud...');
             
-            // Réinitialiser le conteneur de tags
+            // Reset the tag container
             this.tagCloud.innerHTML = '';
             
-            // Créer les conteneurs pour les deux lignes de tags
+            // Create containers for the two rows of tags
             const upperRow = document.createElement('div');
             upperRow.className = 'tag-row';
             
             const lowerRow = document.createElement('div');
             lowerRow.className = 'tag-row';
             
-            // Compter les occurrences de chaque tag
+            // Count occurrences of each tag
             const tagCount = new Map();
             this.cards.forEach(card => {
                 const tags = card.querySelector('.card-tags').value
@@ -259,7 +259,7 @@ class CardManager {
                 });
             });
             
-            // Séparer les tags en deux groupes
+            // Separate tags into two groups
             const upperTags = [];
             const lowerTags = [];
             
@@ -271,7 +271,7 @@ class CardManager {
                 }
             });
             
-            // Fonction pour créer un élément tag
+            // Function to create a tag element
             const createTagElement = (tag, count) => {
                 const tagElement = document.createElement('span');
                 tagElement.className = 'tag' + (this.activeTags.has(tag) ? ' active' : '');
@@ -291,7 +291,7 @@ class CardManager {
                 return tagElement;
             };
             
-            // Ajouter les tags dans l'ordre alphabétique
+            // Add tags in alphabetical order
             upperTags.sort((a, b) => a[0].localeCompare(b[0]))
                 .forEach(([tag, count]) => {
                     upperRow.appendChild(createTagElement(tag, count));
@@ -302,7 +302,7 @@ class CardManager {
                     lowerRow.appendChild(createTagElement(tag, count));
                 });
             
-            // Ajouter les lignes seulement si elles contiennent des tags
+            // Add rows only if they contain tags
             if (upperTags.length > 0) {
                 this.tagCloud.appendChild(upperRow);
             }
@@ -310,10 +310,10 @@ class CardManager {
                 this.tagCloud.appendChild(lowerRow);
             }
             
-            console.log('✓ Nuage de tags mis à jour');
+            console.log('✓ Tag cloud updated');
         }, 300);
         
-        // Observer les changements dans les tags
+        // Observe changes in tags
         const observer = new MutationObserver(() => {
             updateTagCloud();
         });
@@ -324,41 +324,41 @@ class CardManager {
             characterData: true
         });
         
-        // Mettre à jour initialement
+        // Update initially
         updateTagCloud();
         
-        console.log('✓ Recherche configurée');
+        console.log('✓ Search configured');
     }
 
     setupSettingsModal() {
-        console.log('Configuration de la modale des paramètres...');
+        console.log('Settings modal configuration...');
         
-        // Ouvrir la modale
+        // Open the modal
         this.settingsButton.addEventListener('click', () => {
-            console.log('Ouverture de la modale des paramètres');
+            console.log('Opening settings modal');
             this.settingsModal.classList.add('active');
             this.updatePlaceholdersList();
         });
         
-        // Fermer la modale
+        // Close the modal
         this.modalClose.addEventListener('click', () => {
-            console.log('Fermeture de la modale des paramètres');
+            console.log('Closing settings modal');
             this.settingsModal.classList.remove('active');
         });
         
-        // Fermer la modale en cliquant en dehors
+        // Close the modal when clicking outside
         this.settingsModal.addEventListener('click', (e) => {
             if (e.target === this.settingsModal) {
-                console.log('Fermeture de la modale (clic en dehors)');
+                console.log('Closing modal (click outside)');
                 this.settingsModal.classList.remove('active');
             }
         });
         
-        console.log('✓ Modale des paramètres configurée');
+        console.log('✓ Settings modal configured');
     }
 
     updatePlaceholdersList() {
-        console.log('Mise à jour de la liste des placeholders...');
+        console.log('Updating placeholders list...');
         
         const placeholdersList = document.getElementById('placeholdersList');
         if (!placeholdersList) return;
@@ -366,17 +366,17 @@ class CardManager {
         placeholdersList.innerHTML = `
             <div class="placeholder-item">
                 <div class="placeholder-name">{YYYY-MM-DD_HH-mm-SS}</div>
-                <div class="placeholder-description">Date et heure actuelles au format YYYY-MM-DD_HH-mm-SS</div>
-                <div class="placeholder-example">Exemple : 2025-02-19_15-39-05</div>
+                <div class="placeholder-description">Current date and time in YYYY-MM-DD_HH-mm-SS</div>
+                <div class="placeholder-example">Example: 2025-02-19_15-39-05</div>
             </div>
             <div class="placeholder-item">
                 <div class="placeholder-name">{clipboard}</div>
-                <div class="placeholder-description">Contenu actuel du presse-papier</div>
-                <div class="placeholder-example">Exemple : Texte copié...</div>
+                <div class="placeholder-description">Current clipboard content</div>
+                <div class="placeholder-example">Example: Copied text...</div>
             </div>
         `;
         
-        console.log('✓ Liste des placeholders mise à jour');
+        console.log('✓ Placeholders list updated');
     }
 
     loadCards() {
@@ -385,11 +385,11 @@ class CardManager {
             if (savedCards) {
                 const cardData = JSON.parse(savedCards);
                 cardData.forEach(data => {
-                    // Adapter les anciennes données au nouveau format
+                    // Adapt old data to new format
                     const adaptedData = {
                         title: data.title || '',
-                        url: data.url || data.link || '', // Supporter les deux formats
-                        copyText: data.copyText || data.copytext || '', // Supporter les deux formats
+                        url: data.url || data.link || '', // Support both formats
+                        copyText: data.copyText || data.copytext || '', // Support both formats
                         tags: Array.isArray(data.tags) ? data.tags : 
                               data.tags ? data.tags.split(',').map(tag => tag.trim()) : []
                     };
@@ -397,21 +397,21 @@ class CardManager {
                 });
             }
         } catch (error) {
-            console.error('Erreur lors du chargement des cartes:', error);
-            this.showNotification('Erreur lors du chargement des cartes', 'error');
+            console.error('Error loading cards:', error);
+            this.showNotification('Error loading cards', 'error');
         }
     }
 
     addCard(data = null) {
-        console.log('Ajout d\'une nouvelle carte...');
+        console.log('Adding a new card...');
         
-        // Cloner le template
+        // Clone the template
         const card = this.template.content.cloneNode(true).querySelector('.card');
         this.container.appendChild(card);
         this.cards.push(card);
         
         if (data) {
-            console.log('Initialisation avec les données:', data);
+            console.log('Initializing with data:', data);
             const elements = {
                 title: card.querySelector('.card-title'),
                 titleEdit: card.querySelector('.card-title-edit'),
@@ -420,81 +420,81 @@ class CardManager {
                 tagsInput: card.querySelector('.card-tags')
             };
 
-            // Initialiser les valeurs
-            if (elements.title) elements.title.textContent = data.title || 'Nouveau titre';
-            if (elements.titleEdit) elements.titleEdit.value = data.title || 'Nouveau titre';
+            // Initialize values
+            if (elements.title) elements.title.textContent = data.title || 'New title';
+            if (elements.titleEdit) elements.titleEdit.value = data.title || 'New title';
             if (elements.urlTextArea) elements.urlTextArea.value = data.url || '';
             if (elements.copyTextArea) elements.copyTextArea.value = data.copyText || '';
             if (elements.tagsInput) elements.tagsInput.value = data.tags ? data.tags.join(', ') : '';
         }
 
-        // Configurer les événements
+        // Configure events
         this.setupCardEvents(card);
         
         return card;
     }
 
     async copyCardText(card) {
-        console.log('Copie du texte de la carte...');
+        console.log('Copying card text...');
         
         try {
-            // Récupérer le texte à copier depuis le textarea
+            // Get the text to copy from the textarea
             const copyTextArea = card.querySelector('.card-copytext');
             const textToCopy = copyTextArea.value;
-            console.log('Texte original à copier:', textToCopy);
+            console.log('Original text to copy:', textToCopy);
             
-            // Remplacer les placeholders
+            // Replace placeholders
             const processedText = await this.replacePlaceholders(textToCopy);
-            console.log('Texte après remplacement des placeholders:', processedText);
+            console.log('Text after placeholder replacement:', processedText);
             
-            // Copier le texte traité
+            // Copy the processed text
             await navigator.clipboard.writeText(processedText);
-            console.log('✓ Texte copié dans le presse-papier');
+            console.log('✓ Text copied to clipboard');
             
-            // Afficher une notification de succès
-            this.showNotification('Texte copié !', 'success');
+            // Display a success notification
+            this.showNotification('Copied text !', 'success');
             
             return true;
         } catch (err) {
-            console.error('Erreur lors de la copie du texte:', err);
-            this.showNotification('Erreur lors de la copie du texte', 'error');
+            console.error('Error copying text:', err);
+            this.showNotification('Error copying text', 'error');
             return false;
         }
     }
 
     openCardUrls(card) {
-        console.log('Ouverture des URLs de la carte...');
+        console.log('Opening card URLs...');
         
-        // Récupérer les URLs depuis le textarea
+        // Get URLs from the textarea
         const urlTextArea = card.querySelector('.card-url');
         const urls = urlTextArea.value.split('\n').filter(url => url.trim());
         
         if (urls.length > 0) {
-            // Si plusieurs URLs, afficher une notification d'avertissement
+            // If multiple URLs, display a warning notification
             if (urls.length > 1) {
                 this.showNotification(
-                    'Plusieurs liens vont être ouverts. Si certains liens ne s\'ouvrent pas, veuillez vérifier que les popups ne sont pas bloqués par votre navigateur.',
+                    'Multiple links will be opened. If some links do not open, please check that popups are not blocked by your browser.',
                     'warning'
                 );
             }
             
             urls.forEach((url, index) => {
                 if (url.trim()) {
-                    console.log('Ouverture de l\'URL:', url);
+                    console.log('Opening URL:', url);
                     try {
                         const newWindow = window.open(url.trim(), '_blank');
                         if (newWindow === null) {
-                            // Si window.open retourne null, c'est que le popup a été bloqué
+                            // If window.open returns null, the popup was blocked
                             this.showNotification(
-                                'Le navigateur a bloqué l\'ouverture des liens. Veuillez autoriser les popups pour ce site dans les paramètres de votre navigateur.',
+                                'The browser has blocked the opening of links. Please allow popups for this site in your browser settings.',
                                 'error'
                             );
                             return false;
                         }
                     } catch (error) {
-                        console.error('Erreur lors de l\'ouverture de l\'URL:', error);
+                        console.error('Error opening URL:', error);
                         this.showNotification(
-                            'Une erreur est survenue lors de l\'ouverture des liens.',
+                            'An error occurred while opening links.',
                             'error'
                         );
                         return false;
@@ -503,15 +503,15 @@ class CardManager {
             });
             return true;
         } else {
-            console.log('Aucune URL à ouvrir');
+            console.log('No URL to open');
             return false;
         }
     }
 
     setupCardEvents(card) {
-        console.log('Configuration des événements de la carte...');
+        console.log('Configuring card events...');
         
-        // Récupérer les éléments de la carte
+        // Get card elements
         const elements = {
             title: card.querySelector('.card-title'),
             titleEdit: card.querySelector('.card-title-edit'),
@@ -524,7 +524,7 @@ class CardManager {
             actionsIcons: card.querySelector('.card-actions-icons')
         };
 
-        // Fonction pour mettre à jour les icônes d'action
+        // Function to update action icons
         const updateActionIcons = () => {
             const hasUrls = elements.urlTextArea.value.trim() !== '';
             const hasText = elements.copyTextArea.value.trim() !== '';
@@ -536,14 +536,14 @@ class CardManager {
             elements.actionsIcons.textContent = icons.join(' ');
         };
 
-        // Mettre à jour les icônes initialement
+        // Update icons initially
         updateActionIcons();
 
-        // Mettre à jour les icônes quand le contenu change
+        // Update icons when content changes
         elements.urlTextArea.addEventListener('input', updateActionIcons);
         elements.copyTextArea.addEventListener('input', updateActionIcons);
 
-        // Gestion du clic sur le titre
+        // Handle title click
         elements.title.addEventListener('click', async () => {
             const copySuccess = await this.copyCardText(card);
             const urls = elements.urlTextArea.value.split('\n').filter(url => url.trim());
@@ -552,13 +552,13 @@ class CardManager {
             }
         });
 
-        // Gestion de l'expansion
+        // Handle expansion
         elements.expandBtn.addEventListener('click', () => {
             card.classList.toggle('expanded');
             elements.expandBtn.style.transform = card.classList.contains('expanded') ? 'rotate(180deg)' : '';
         });
 
-        // Gestion de la sauvegarde
+        // Handle saving
         elements.saveBtn.addEventListener('click', () => {
             elements.title.textContent = elements.titleEdit.value;
             updateActionIcons();
@@ -567,57 +567,57 @@ class CardManager {
             elements.expandBtn.style.transform = '';
         });
 
-        // Gestion de la suppression
+        // Handle deletion
         elements.deleteBtn.addEventListener('click', () => {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cette carte ?')) {
+            if (confirm('Are you sure you want to delete this card?')) {
                 card.remove();
                 this.cards = this.cards.filter(c => c !== card);
                 this.saveAndExport();
             }
         });
 
-        // Synchronisation du titre
+        // Title synchronization
         elements.titleEdit.addEventListener('input', () => {
             elements.title.textContent = elements.titleEdit.value;
         });
 
-        console.log('✓ Événements de la carte configurés');
+        console.log('✓ Card events configured');
     }
 
     createCard(title, link, copyText, tags = []) {
-        console.log('Création d\'une nouvelle carte...');
+        console.log('Creating a new card...');
         
         const card = this.template.content.cloneNode(true);
         const cardElement = card.querySelector('.card');
         
-        // Remplir les champs
+        // Fill fields
         cardElement.querySelector('.card-title-edit').value = title;
         cardElement.querySelector('.card-url').value = link;
         cardElement.querySelector('.card-copytext').value = copyText;
         cardElement.querySelector('.card-tags').value = tags.join(', ');
         
-        // Configurer les événements
+        // Configure events
         this.setupCardEvents(cardElement);
         
-        console.log('✓ Carte créée avec succès');
+        console.log('✓ Card created successfully');
         return card;
     }
 
-    // Fonction pour remplacer les placeholders dans un texte
+    // Function to replace placeholders in a text
     async replacePlaceholders(text) {
-        console.log('Remplacement des placeholders dans le texte...');
+        console.log('Replacing placeholders in text...');
         let result = text;
         
         for (const [key, info] of Object.entries(this.placeholders)) {
             const placeholder = `{${key}}`;
             if (result.includes(placeholder)) {
                 try {
-                    console.log(`Traitement du placeholder : ${placeholder}`);
+                    console.log(`Processing placeholder: ${placeholder}`);
                     const value = await info.getValue();
                     result = result.replaceAll(placeholder, value);
-                    console.log(`✓ Placeholder ${placeholder} remplacé avec succès`);
+                    console.log(`✓ Placeholder ${placeholder} successfully replaced`);
                 } catch (err) {
-                    console.error(`Erreur lors du remplacement du placeholder ${key}:`, err);
+                    console.error(`Error replacing placeholder ${key}:`, err);
                 }
             }
         }
@@ -626,7 +626,7 @@ class CardManager {
     }
 
     saveAndExport() {
-        console.log('Sauvegarde des cartes...');
+        console.log('Saving cards...');
         
         const cardsData = this.cards.map(card => {
             return {
@@ -640,9 +640,9 @@ class CardManager {
         });
         
         localStorage.setItem('cards', JSON.stringify(cardsData));
-        console.log('✓ Cartes sauvegardées');
+        console.log('✓ Cards saved');
         
-        // Télécharger le fichier JSON
+        // Download JSON file
         const blob = new Blob([JSON.stringify(cardsData, null, 2)], {type: 'application/json'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -670,10 +670,10 @@ class CardManager {
                 this.cards = [];
                 cardData.forEach(data => this.addCard(data));
                 localStorage.setItem('cards', JSON.stringify(cardData));
-                this.showNotification('Import effectué avec succès !');
+                this.showNotification('Import completed successfully!');
             } catch (error) {
-                console.error('Erreur lors de l\'import:', error);
-                this.showNotification('Erreur lors de l\'import', 'error');
+                console.error('Error during import:', error);
+                this.showNotification('Error during import', 'error');
             }
         };
         reader.readAsText(file);
@@ -685,24 +685,24 @@ class CardManager {
         notification.className = `notification ${type}`;
         notification.textContent = message;
         
-        // Positionner près du curseur si l'événement est fourni
+        // Position near cursor if event is provided
         if (event) {
             const x = event.clientX;
             const y = event.clientY;
             
-            // Ajuster la position pour éviter que la notification ne sorte de l'écran
-            const notificationWidth = 200; // Largeur approximative
-            const notificationHeight = 40; // Hauteur approximative
+            // Adjust position to prevent notification from going off screen
+            const notificationWidth = 200; // Approximate width
+            const notificationHeight = 40; // Approximate height
             
-            let posX = x + 10; // 10px à droite du curseur
-            let posY = y + 10; // 10px en dessous du curseur
+            let posX = x + 10; // 10px to the right of cursor
+            let posY = y + 10; // 10px below cursor
             
-            // Ajuster si trop près du bord droit
+            // Adjust if too close to right edge
             if (posX + notificationWidth > window.innerWidth) {
                 posX = x - notificationWidth - 10;
             }
             
-            // Ajuster si trop près du bas
+            // Adjust if too close to bottom
             if (posY + notificationHeight > window.innerHeight) {
                 posY = y - notificationHeight - 10;
             }
@@ -714,10 +714,10 @@ class CardManager {
         
         this.notificationContainer.appendChild(notification);
         
-        // Afficher avec animation
+        // Display with animation
         setTimeout(() => notification.classList.add('show'), 10);
         
-        // Supprimer après 2 secondes
+        // Remove after 2 seconds
         setTimeout(() => {
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
@@ -725,7 +725,7 @@ class CardManager {
     }
 }
 
-// Initialiser l'application
+// Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     new CardManager();
 });
