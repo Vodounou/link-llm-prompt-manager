@@ -1,0 +1,111 @@
+{
+  "cards": [
+    {
+      "id": "card-1",
+      "title": "Research Assistant Prompt",
+      "content": "You are a research assistant helping me explore the topic of {clipboard}. Please provide a comprehensive overview including key concepts, major theories, recent developments, and potential future directions. Include relevant academic references where appropriate.",
+      "links": [
+        "https://scholar.google.com/",
+        "https://www.researchgate.net/"
+      ],
+      "tags": ["research", "LLM", "academic"],
+      "pinned": true,
+      "created": "2025-03-01T10:15:30.000Z",
+      "modified": "2025-03-07T09:22:15.000Z"
+    },
+    {
+      "id": "card-2",
+      "title": "Code Reviewer",
+      "content": "Review the following code for potential bugs, security issues, and optimization opportunities. Provide specific recommendations for improvement:\n\n```\n{clipboard}\n```",
+      "links": [
+        "https://github.com/",
+        "https://stackoverflow.com/"
+      ],
+      "tags": ["programming", "code review", "LLM"],
+      "pinned": false,
+      "created": "2025-02-25T14:30:45.000Z",
+      "modified": "2025-03-05T16:18:22.000Z"
+    },
+    {
+      "id": "card-3",
+      "title": "Meeting Notes Template",
+      "content": "# Meeting Notes: {YYYY-MM-DD_HH-mm-SS}\n\n## Participants\n- \n\n## Agenda\n1. \n2. \n3. \n\n## Discussion Points\n- \n\n## Action Items\n- [ ] \n- [ ] \n\n## Next Meeting\n- Date: \n- Time: ",
+      "links": [],
+      "tags": ["organisation", "meeting", "template"],
+      "pinned": true,
+      "created": "2025-02-18T09:10:05.000Z",
+      "modified": "2025-02-18T09:10:05.000Z"
+    },
+    {
+      "id": "card-4",
+      "title": "Medical Research Summary",
+      "content": "Please summarize the latest research findings on {clipboard} in the medical field. Include recent clinical trials, treatment approaches, and emerging therapies. Focus on evidence-based information from peer-reviewed sources.",
+      "links": [
+        "https://pubmed.ncbi.nlm.nih.gov/",
+        "https://www.thelancet.com/",
+        "https://www.nejm.org/"
+      ],
+      "tags": ["medical", "research", "LLM"],
+      "pinned": false,
+      "created": "2025-03-02T11:45:30.000Z",
+      "modified": "2025-03-06T13:20:10.000Z"
+    },
+    {
+      "id": "card-5",
+      "title": "Web Search Optimization",
+      "content": "I need to find specific information about {clipboard}. Please provide me with:\n\n1. The most effective search queries I should use\n2. Recommended specialized databases or websites for this topic\n3. Advanced search operators that might help narrow down results\n4. Suggestions for filtering out irrelevant information",
+      "links": [
+        "https://www.google.com/advanced_search",
+        "https://scholar.google.com/"
+      ],
+      "tags": ["recherche web", "search", "LLM"],
+      "pinned": false,
+      "created": "2025-02-28T15:35:20.000Z",
+      "modified": "2025-03-04T10:12:45.000Z"
+    },
+    {
+      "id": "card-6",
+      "title": "AI Playground Prompt",
+      "content": "Let's explore a creative thought experiment about {clipboard}. Consider multiple perspectives, potential future scenarios, ethical implications, and unexpected consequences. Feel free to speculate but clearly distinguish between established facts and speculation.",
+      "links": [],
+      "tags": ["playground", "creative", "LLM"],
+      "pinned": true,
+      "created": "2025-03-03T16:25:40.000Z",
+      "modified": "2025-03-03T16:25:40.000Z"
+    },
+    {
+      "id": "card-7",
+      "title": "JSON Data Viewer",
+      "content": "Please analyze and explain the structure of this JSON data:\n\n```json\n{clipboard}\n```\n\nProvide a clear explanation of the data schema, key elements, and potential use cases. If there are any issues with the JSON format, please identify and suggest corrections.",
+      "links": [
+        "https://jsonlint.com/",
+        "https://jsonformatter.org/"
+      ],
+      "tags": ["JSON", "data", "programming"],
+      "pinned": false,
+      "created": "2025-02-22T13:15:50.000Z",
+      "modified": "2025-03-01T09:30:25.000Z"
+    },
+    {
+      "id": "card-8",
+      "title": "Meeting Summary",
+      "content": "Please summarize the key points from this meeting transcript in a concise and structured format:\n\n{clipboard}\n\nInclude main topics discussed, decisions made, action items, and responsibilities assigned. Organize the information in a way that makes it easy to review and reference later.",
+      "links": [],
+      "tags": ["reunion", "organisation", "summary"],
+      "pinned": false,
+      "created": "2025-02-20T10:05:15.000Z",
+      "modified": "2025-02-25T14:40:30.000Z"
+    }
+  ],
+  "settings": {
+    "theme": "dark",
+    "language": "en",
+    "cardSort": "modified",
+    "cardSortDirection": "desc",
+    "showPinnedFirst": true,
+    "autoSave": true,
+    "backupFrequency": "daily"
+  },
+  "version": "1.2.0",
+  "lastBackup": "2025-03-07T14:04:19.200Z"
+}

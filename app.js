@@ -395,11 +395,64 @@ class CardManager {
                     };
                     this.addCard(adaptedData);
                 });
+                console.log('Cards loaded from localStorage');
+            } else {
+                // Aucune carte trouvée dans le stockage local, essayer de charger le fichier de démonstration
+                console.log('No cards found in localStorage, trying to load demo file...');
+                this.loadDemoCards();
             }
         } catch (error) {
             console.error('Error loading cards:', error);
             this.showNotification('Error loading cards', 'error');
         }
+    }
+
+    loadDemoCards() {
+        console.log('Loading demo cards...');
+        fetch('demo-data.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Demo data loaded:', data);
+                
+                // Vérifier si le format est celui attendu (nouveau format avec cards[])
+                if (data.cards && Array.isArray(data.cards)) {
+                    // Nouveau format JSON avec structure cards[]
+                    data.cards.forEach(card => {
+                        const adaptedData = {
+                            title: card.title || '',
+                            url: Array.isArray(card.links) ? card.links.join('\n') : (card.url || ''),
+                            copyText: card.content || card.copyText || card.copytext || '',
+                            tags: Array.isArray(card.tags) ? card.tags : 
+                                  (typeof card.tags === 'string' ? card.tags.split(',').map(tag => tag.trim()) : [])
+                        };
+                        this.addCard(adaptedData);
+                    });
+                } else if (Array.isArray(data)) {
+                    // Ancien format JSON (tableau simple)
+                    data.forEach(card => {
+                        const adaptedData = {
+                            title: card.title || '',
+                            url: card.url || card.link || '',
+                            copyText: card.copyText || card.copytext || '',
+                            tags: Array.isArray(card.tags) ? card.tags : 
+                                  (typeof card.tags === 'string' ? card.tags.split(',').map(tag => tag.trim()) : [])
+                        };
+                        this.addCard(adaptedData);
+                    });
+                }
+                
+                this.showNotification('Cartes de démonstration chargées avec succès', 'success');
+                console.log('Demo cards loaded successfully');
+            })
+            .catch(error => {
+                console.error('Error loading demo cards:', error);
+                this.showNotification('Impossible de charger les cartes de démonstration', 'error');
+            });
     }
 
     addCard(data = null) {
