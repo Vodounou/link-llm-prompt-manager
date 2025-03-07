@@ -1,0 +1,721 @@
+/* Light theme */
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --card-bg: #f5f5f5;
+    --card-expanded-bg: #ffffff;
+    --border-color: #e0e0e0;
+    --hover-bg: rgba(0, 0, 0, 0.05);
+    --spacing: 1rem;
+    --border-radius: 8px;
+    --transition-duration: 0.3s;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --card-bg: #2d2d2d;
+    --card-expanded-bg: #252525;
+    --border-color: #404040;
+    --hover-bg: rgba(255, 255, 255, 0.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Computer Modern Serif", Georgia, serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    margin: 0;
+    padding: 2rem;
+    transition: background-color var(--transition-duration), 
+                color var(--transition-duration);
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+#themeToggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color var(--transition-duration);
+}
+
+#themeToggle:hover {
+    background-color: var(--hover-bg);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: normal;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+}
+
+.header-top {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.header-controls {
+    display: flex;
+    gap: 0;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.header-controls button {
+    padding: 0.4em 0.6em;
+    font-size: 0.9em;
+    margin-left: 0 !important;
+    opacity: 0.8;
+}
+
+.header-controls button:hover {
+    opacity: 1;
+}
+
+button {
+    font-family: "Computer Modern Serif", Georgia, serif;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    color: var(--text-color-secondary);
+    background: none;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    column-gap: 26px;
+    row-gap: 16px;
+    padding: 1rem;
+}
+
+/* Style des cartes */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+}
+
+.card-title-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
+    max-width: calc(100% - 60px);
+    overflow: hidden;
+}
+
+.card-title {
+    margin: 0;
+    font-size: 1.1em;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    padding: 4px 0;
+}
+
+.card-actions-icons {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+    color: var(--text-color);
+    opacity: 0.4;
+    font-size: 0.8em;
+    white-space: nowrap;
+    letter-spacing: 4px;
+}
+
+.card-controls {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: flex-end;
+    align-items: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.4rem;
+}
+
+.card-controls button {
+    font-size: 1em;
+    padding: 0.2em 0.4em;
+    background: none;
+    border: none;
+    color: var(--text-color-secondary);
+    opacity: 0.6;
+    transition: all 0.2s ease;
+    filter: grayscale(100%);
+    margin-left: auto;
+}
+
+.card-controls button:hover {
+    color: var(--accent-color);
+    background: none;
+    opacity: 1;
+    filter: none;
+}
+
+.btn-expand {
+    padding: 2px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8em;
+    color: var(--text-color);
+    opacity: 0.6;
+    flex-shrink: 0;
+}
+
+.card-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    padding: 5px;
+}
+
+.btn-save {
+    order: 2; /* Pour mettre le bouton à droite */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.btn-delete {
+    order: 1; /* Pour mettre le bouton à gauche */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background-color: transparent;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.card.expanded {
+    background-color: var(--card-expanded-bg);
+}
+
+.card-content {
+    display: none;
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.card.expanded .card-content {
+    display: block;
+}
+
+.card-title-edit {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: inherit;
+    font-size: 1.1em;
+}
+
+.btn-delete {
+    color: var(--text-color);
+    font-size: 1.2rem;
+}
+
+.btn-delete:hover {
+    color: #ff4444;
+}
+
+.card-actions {
+    margin-top: 15px;
+    text-align: right;
+}
+
+.btn-copy {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: none;
+    padding: 5px 10px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.btn-link, .btn-copy-only {
+    opacity: 0.8;
+}
+
+.btn-link:hover, .btn-copy-only:hover {
+    opacity: 1;
+}
+
+.card-url {
+    min-height: 60px;
+    resize: vertical;
+}
+
+/* Animation de la flèche d'expansion */
+.btn-expand {
+    transition: transform var(--transition-duration);
+}
+
+.card.expanded .btn-expand {
+    transform: rotate(180deg);
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: normal;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: "Computer Modern Serif", Georgia, serif;
+    font-size: 1rem;
+    background-color: var(--card-expanded-bg);
+    color: var(--text-color);
+    transition: border-color var(--transition-duration),
+                background-color var(--transition-duration),
+                color var(--transition-duration);
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--text-color);
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.markdown-preview {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.save-card-button {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.btn-theme {
+    font-size: 1em;
+    padding: 0.3em;
+    background: none;
+    transition: transform 0.3s ease;
+}
+
+.btn-theme:hover {
+    transform: rotate(360deg);
+    background: none;
+}
+
+.search-container {
+    margin: 1em 0;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.5em 1em;
+    font-size: 1em;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Computer Modern Serif', serif;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px var(--accent-color-transparent);
+}
+
+.search-count {
+    font-size: 0.9em;
+    color: var(--text-color-secondary);
+}
+
+.card.filtered-out {
+    opacity: 0;
+    transform: scale(0.95);
+    position: absolute;
+    pointer-events: none;
+}
+
+.tag-cloud {
+    margin: 0.5em 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8em;
+    justify-content: center;
+    min-height: 1.5em;
+    line-height: 1.5;
+    font-family: "Computer Modern Serif", Georgia, serif;
+}
+
+.tag {
+    color: var(--text-color);
+    cursor: pointer;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.tag:hover {
+    text-decoration: underline;
+}
+
+.tag.active {
+    font-weight: bold;
+}
+
+.tag .count {
+    font-size: 0.8em;
+    color: #666;
+}
+
+/* Ajustement des boutons */
+.btn-primary, .btn-secondary {
+    font-size: 0.85em;
+    padding: 0.4em 0.8em;
+    border-radius: 4px;
+}
+
+/* Style des notifications */
+.notification {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    padding: 0.8em 1.2em;
+    margin-bottom: 0.5em;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    font-family: "Computer Modern Serif", Georgia, serif;
+    font-size: 0.9em;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 1000;
+    white-space: nowrap;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification.success {
+    border-left: 3px solid var(--accent-color);
+}
+
+.notification.error {
+    border-left: 3px solid #ff4444;
+}
+
+/* Styles pour la modale des paramètres */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal.active {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 50px;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.modal-body {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.settings-section {
+    border-bottom: 1px solid #e9ecef;
+    padding: 2rem 0;
+}
+
+.settings-section:last-child {
+    border-bottom: none;
+    padding-bottom: 2rem;
+}
+
+.settings-section h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+/* Styles pour la section d'aide dans les paramètres */
+.help-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+    line-height: 1.6;
+}
+
+.help-content h4 {
+    color: #2c3e50;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.help-content p {
+    margin-bottom: 1rem;
+}
+
+.help-content ul {
+    list-style-type: disc;
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.help-content li {
+    margin-bottom: 0.5rem;
+}
+
+.help-content strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.help-content p strong {
+    background-color: #f8f9fa;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+}
+
+/* Ajout d'icônes pour les listes dans la section sauvegarde */
+.settings-section:nth-child(2) .help-content ul li {
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.settings-section:nth-child(2) .help-content ul li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #3498db;
+}
+
+/* Style pour les conseils */
+.help-content p:last-child {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: #e1f5fe;
+    border-left: 4px solid #03a9f4;
+    border-radius: 4px;
+}
+
+/* Style pour le bouton des paramètres */
+.btn-settings {
+    font-size: 1.2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    transition: transform 0.2s;
+}
+
+.btn-settings:hover {
+    transform: rotate(45deg);
+}
+
+/* Styles pour les placeholders et exemples */
+.placeholders-list {
+    display: grid;
+    gap: 1.5rem;
+    margin: 1rem 0;
+}
+
+.placeholder-item {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.25rem;
+}
+
+.placeholder-name {
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #2c3e50;
+    background-color: #e9ecef;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 1rem;
+    border: 1px solid #dee2e6;
+}
+
+.placeholder-description {
+    color: #495057;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.placeholder-example {
+    font-family: 'Monaco', 'Consolas', monospace;
+    background-color: white;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    color: #666;
+    font-size: 0.95em;
+}
+
+/* Style pour les listes numérotées dans l'aide */
+.help-content ol {
+    list-style-type: decimal;
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+.help-content ol li {
+    margin-bottom: 0.5rem;
+}
+
+/* Style pour les actions des cartes */
+.help-content ul li ol {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+/* Style pour les actions */
+.help-content ul li strong {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    background-color: #e9ecef;
+    border-radius: 3px;
+    margin-right: 0.5rem;
+}
+
+/* Style pour les notes */
+.help-content p strong:first-child {
+    color: #0288d1;
+}
