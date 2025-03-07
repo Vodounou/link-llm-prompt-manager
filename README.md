@@ -13,6 +13,11 @@ A lightweight web application for organizing and managing LLM prompts, links, an
 - Light/dark theme
 - Minimalist and intuitive interface
 
+## Overview
+
+![Main application interface](assets/images/main-view.png)
+*Main interface showing organized cards with their tags and search options*
+
 ## Use Cases
 
 - **LLM Prompt Management**: Store and organize prompts for different AI models
