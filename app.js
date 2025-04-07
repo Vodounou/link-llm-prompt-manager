@@ -54,6 +54,14 @@ class CardManager {
         this.settingsModal = document.getElementById('settingsModal');
         this.modalClose = this.settingsModal.querySelector('.modal-close');
         this.placeholdersList = document.getElementById('placeholdersList');
+        
+        // Éléments de la modale d'édition de prompt
+        this.editPromptModal = document.getElementById('editPromptModal');
+        this.modalEditTextarea = document.getElementById('modalEditTextarea');
+        this.saveEditPromptBtn = document.getElementById('saveEditPrompt');
+        this.cancelEditPromptBtn = document.getElementById('cancelEditPrompt');
+        this.editPromptModalClose = this.editPromptModal.querySelector('.modal-close');
+        this.currentEditingCard = null; // Pour stocker la référence à la carte en cours d'édition
 
         // Filter state
         this.activeTags = new Set();
@@ -145,6 +153,9 @@ class CardManager {
         
         // Settings modal configuration
         this.setupSettingsModal();
+        
+        // Configuration de la modale d'édition de prompt
+        this.setupEditPromptModal();
         
         // Configure search
         this.setupSearch();
@@ -355,6 +366,37 @@ class CardManager {
         });
         
         console.log('✓ Settings modal configured');
+    }
+    
+    /**
+     * Configure la modale d'édition de prompt et ses gestionnaires d'événements
+     */
+    setupEditPromptModal() {
+        console.log('Configuration de la modale d\'édition de prompt...');
+        
+        // Fermer la modale quand on clique sur le bouton de fermeture
+        this.editPromptModalClose.addEventListener('click', () => {
+            this.closeEditPromptModal();
+        });
+        
+        // Fermer la modale quand on clique en dehors
+        this.editPromptModal.addEventListener('click', (e) => {
+            if (e.target === this.editPromptModal) {
+                this.closeEditPromptModal();
+            }
+        });
+        
+        // Fermer la modale sans sauvegarder quand on clique sur Annuler
+        this.cancelEditPromptBtn.addEventListener('click', () => {
+            this.closeEditPromptModal();
+        });
+        
+        // Sauvegarder les modifications et fermer la modale quand on clique sur Enregistrer
+        this.saveEditPromptBtn.addEventListener('click', () => {
+            this.saveEditPrompt();
+        });
+        
+        console.log('✓ Configuration de la modale d\'édition de prompt terminée');
     }
 
     updatePlaceholdersList() {
@@ -574,7 +616,8 @@ class CardManager {
             expandBtn: card.querySelector('.btn-expand'),
             saveBtn: card.querySelector('.btn-save'),
             deleteBtn: card.querySelector('.btn-delete'),
-            actionsIcons: card.querySelector('.card-actions-icons')
+            actionsIcons: card.querySelector('.card-actions-icons'),
+            editBtn: card.querySelector('.btn-edit')
         };
 
         // Function to update action icons
@@ -622,10 +665,11 @@ class CardManager {
 
         // Handle deletion
         elements.deleteBtn.addEventListener('click', () => {
-            if (confirm('Are you sure you want to delete this card?')) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette carte ?')) {
                 card.remove();
                 this.cards = this.cards.filter(c => c !== card);
                 this.saveAndExport();
+                this.showNotification('Carte supprimée avec succès');
             }
         });
 
@@ -633,6 +677,15 @@ class CardManager {
         elements.titleEdit.addEventListener('input', () => {
             elements.title.textContent = elements.titleEdit.value;
         });
+        
+        // Gestion du bouton d'édition du prompt
+        if (elements.editBtn) {
+            elements.editBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.openEditPromptModal(card);
+            });
+        }
 
         console.log('✓ Card events configured');
     }
@@ -775,6 +828,160 @@ class CardManager {
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
         }, 2000);
+    }
+    
+    /**
+     * Ouvre la modale d'édition de prompt avec le texte de la carte sélectionnée
+     * @param {HTMLElement} card - La carte dont le texte doit être édité
+     */
+    openEditPromptModal(card) {
+        console.log('Ouverture de la modale d\'édition de prompt...');
+        
+        // Stocker la référence à la carte en cours d'édition
+        this.currentEditingCard = card;
+        
+        // Récupérer le texte actuel de la carte
+        const copyText = card.querySelector('.card-copytext').value;
+        
+        // Afficher le texte dans la zone de texte de la modale
+        this.modalEditTextarea.value = copyText;
+        
+        // Ouvrir la modale
+        this.editPromptModal.classList.add('active');
+        
+        // Ajuster la hauteur de la zone de texte en fonction du contenu
+        this.adjustTextareaHeight();
+        
+        // Mettre le focus sur la zone de texte
+        setTimeout(() => {
+            this.modalEditTextarea.focus();
+        }, 100);
+        
+        // Ajouter un écouteur d'événements pour ajuster la hauteur lors de la saisie
+        this.modalEditTextarea.addEventListener('input', () => this.adjustTextareaHeight());
+        
+        console.log('✓ Modale d\'édition de prompt ouverte');
+    }
+    
+    /**
+     * Ajuste la hauteur de la zone de texte en fonction du contenu
+     * avec une limite maximale pour ne pas dépasser la taille de l'écran
+     */
+    adjustTextareaHeight() {
+        // Réinitialiser la hauteur pour obtenir la hauteur de base
+        this.modalEditTextarea.style.height = 'auto';
+        
+        // Calculer la hauteur nécessaire pour afficher tout le contenu
+        const scrollHeight = this.modalEditTextarea.scrollHeight;
+        
+        // Limiter la hauteur maximale à 80% de la hauteur de la fenêtre moins l'espace pour les boutons
+        const maxHeight = Math.min(scrollHeight, window.innerHeight * 0.8 - 200);
+        
+        // Définir la nouvelle hauteur
+        this.modalEditTextarea.style.height = `${maxHeight}px`;
+        
+        // Ajuster également la largeur de la modale en fonction du contenu
+        this.adjustModalWidth();
+        
+        console.log(`Hauteur de la zone de texte ajustée à ${maxHeight}px`);
+    }
+    
+    /**
+     * Ajuste la largeur de la modale en fonction du contenu
+     * en analysant les lignes les plus longues du texte
+     */
+    adjustModalWidth() {
+        // Obtenir le contenu du textarea
+        const text = this.modalEditTextarea.value;
+        
+        // Si le texte est vide, utiliser la largeur par défaut
+        if (!text) return;
+        
+        // Diviser le texte en lignes
+        const lines = text.split('\n');
+        
+        // Créer un élément temporaire pour mesurer la largeur du texte
+        const tempSpan = document.createElement('span');
+        tempSpan.style.font = window.getComputedStyle(this.modalEditTextarea).font;
+        tempSpan.style.visibility = 'hidden';
+        tempSpan.style.position = 'absolute';
+        tempSpan.style.whiteSpace = 'nowrap';
+        document.body.appendChild(tempSpan);
+        
+        // Trouver la ligne la plus longue
+        let maxLineWidth = 0;
+        for (const line of lines) {
+            tempSpan.textContent = line;
+            const width = tempSpan.offsetWidth;
+            maxLineWidth = Math.max(maxLineWidth, width);
+        }
+        
+        // Supprimer l'élément temporaire
+        document.body.removeChild(tempSpan);
+        
+        // Ajouter une marge pour les paddings et les bordures
+        const padding = 40; // 20px de padding de chaque côté
+        const modalPadding = 60; // Padding supplémentaire pour la modale
+        
+        // Calculer la largeur idéale (avec un minimum de 50% et un maximum de 90% de la largeur de la fenêtre)
+        const idealWidth = maxLineWidth + padding + modalPadding;
+        const minWidth = Math.max(window.innerWidth * 0.5, 400); // Au moins 50% de la largeur de la fenêtre ou 400px
+        const maxModalWidth = window.innerWidth * 0.9; // Au plus 90% de la largeur de la fenêtre
+        
+        // Appliquer la largeur calculée à la modale
+        const modalContent = this.editPromptModal.querySelector('.modal-content');
+        const newWidth = Math.min(Math.max(idealWidth, minWidth), maxModalWidth);
+        modalContent.style.width = `${newWidth}px`;
+        
+        console.log(`Largeur de la modale ajustée à ${newWidth}px (basée sur une ligne de ${maxLineWidth}px)`);
+    }
+    
+    /**
+     * Ferme la modale d'édition de prompt sans sauvegarder les modifications
+     */
+    closeEditPromptModal() {
+        console.log('Fermeture de la modale d\'édition de prompt...');
+        
+        // Fermer la modale
+        this.editPromptModal.classList.remove('active');
+        
+        // Supprimer l'écouteur d'événements pour éviter les fuites de mémoire
+        this.modalEditTextarea.removeEventListener('input', () => this.adjustTextareaHeight());
+        
+        // Réinitialiser la référence à la carte en cours d'édition
+        this.currentEditingCard = null;
+        
+        console.log('✓ Modale d\'édition de prompt fermée');
+    }
+    
+    /**
+     * Sauvegarde les modifications du texte et ferme la modale
+     */
+    saveEditPrompt() {
+        console.log('Sauvegarde des modifications du prompt...');
+        
+        // Vérifier si une carte est en cours d'édition
+        if (!this.currentEditingCard) {
+            console.error('Aucune carte en cours d\'édition');
+            return;
+        }
+        
+        // Récupérer le nouveau texte
+        const newText = this.modalEditTextarea.value;
+        
+        // Mettre à jour le texte de la carte
+        this.currentEditingCard.querySelector('.card-copytext').value = newText;
+        
+        // Sauvegarder les modifications dans le stockage local
+        this.saveAndExport();
+        
+        // Afficher une notification de succès
+        this.showNotification('Prompt mis à jour avec succès !');
+        
+        // Fermer la modale
+        this.closeEditPromptModal();
+        
+        console.log('✓ Modifications du prompt sauvegardées');
     }
 }
 

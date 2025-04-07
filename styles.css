@@ -527,6 +527,14 @@ textarea {
     overflow-y: auto;
 }
 
+/* Styles spécifiques pour la modale d'édition de prompt */
+#editPromptModal .modal-content {
+    width: auto;
+    min-width: 50%;
+    max-width: 90%;
+    transition: width 0.3s ease;
+}
+
 .modal-header {
     display: flex;
     justify-content: space-between;
@@ -718,4 +726,122 @@ textarea {
 /* Style pour les notes */
 .help-content p strong:first-child {
     color: #0288d1;
+}
+
+/* Styles pour la modale d'édition de prompt */
+.edit-prompt-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    max-height: calc(80vh - 120px); /* Hauteur maximale pour s'assurer que la modale ne dépasse pas l'écran */
+}
+
+#modalEditTextarea {
+    width: 100%;
+    min-height: 150px;
+    max-height: calc(80vh - 200px); /* Hauteur maximale pour s'assurer que la zone de texte ne dépasse pas l'écran */
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-family: "Computer Modern Serif", Georgia, serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: vertical;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    overflow-y: auto; /* Ajouter une barre de défilement si nécessaire */
+}
+
+.edit-prompt-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.edit-prompt-buttons button {
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-family: "Computer Modern Serif", Georgia, serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+.edit-prompt-buttons button:hover {
+    background-color: var(--hover-bg);
+}
+
+.edit-prompt-buttons .btn-primary {
+    background-color: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+.edit-prompt-buttons .btn-primary:hover {
+    background-color: #3a80d2;
+}
+
+.btn-edit {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    margin-left: 0.5rem;
+    padding: 0.2rem;
+}
+
+.btn-edit:hover {
+    opacity: 1;
+}
+
+/* Adaptation pour le thème sombre */
+[data-theme="dark"] #modalEditTextarea {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    border-color: #404040;
+}
+
+[data-theme="dark"] .edit-prompt-buttons button {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    border-color: #404040;
+}
+
+[data-theme="dark"] .edit-prompt-buttons button:hover {
+    background-color: #3d3d3d;
+}
+
+[data-theme="dark"] .edit-prompt-buttons .btn-primary {
+    background-color: #3a80d2;
+    color: #e0e0e0;
+    border-color: #3a80d2;
+}
+
+[data-theme="dark"] .edit-prompt-buttons .btn-primary:hover {
+    background-color: #2a70c2;
+}
+
+[data-theme="dark"] .modal-content {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+    border-color: #404040;
+}
+
+[data-theme="dark"] .modal-header {
+    border-bottom-color: #404040;
+}
+
+[data-theme="dark"] .modal-header h2 {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .modal-close {
+    color: #e0e0e0;
 }
